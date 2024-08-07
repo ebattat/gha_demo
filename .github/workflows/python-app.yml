@@ -38,6 +38,6 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-    - name: Print Hello World
-      run: echo "Hello, World!"
+    - name: run simple_math.py
+      run: python simple_math.py
   
