@@ -40,7 +40,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # 60 differnt inputs
         inputs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]
     steps:
     - uses: actions/checkout@v4
@@ -53,6 +52,7 @@ jobs:
         export CMD_VALUE="python simple_math.py ${{ matrix.inputs }} 5"
         export OUTPUT=$($CMD_VALUE)
 
+        # Log to GitHub step summary
         echo "### Run Simple Math" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "#### Add" >> $GITHUB_STEP_SUMMARY
@@ -61,13 +61,13 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "O/P: ${OUTPUT}" >> $GITHUB_STEP_SUMMARY
 
-        echo "# I/P: ${{ matrix.inputs }} 5" >> e2e.txt
-        echo "" >> e2e.txt
-        echo "# O/P: ${OUTPUT}" >> e2e.txt
+        # Create and append results to results.txt in the workspace
+        echo "# I/P: ${{ matrix.inputs }} 5" >> results.txt
+        echo "# O/P: ${OUTPUT}" >> results.txt
+        echo "" >> results.txt
 
-    - name: Upload e2e output
+    - name: Upload results as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: e2e.txt
-        path: e2e.txt
-        if-no-files-found: error
+        name: e2e-results-${{ matrix.inputs }}
+        path: results.txt
