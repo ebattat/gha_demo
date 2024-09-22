@@ -52,7 +52,7 @@ jobs:
         export CMD_VALUE="python simple_math.py ${{ matrix.inputs }} 5"
         export OUTPUT=$($CMD_VALUE)
 
-        echo "### Run Simple Math" >> $GITHUB_STEP_SUMMARY
+        echo "### Calculate Sum of Numbers:" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "#### Add" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
