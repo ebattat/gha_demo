@@ -71,29 +71,3 @@ jobs:
       with:
         name: e2e-results-${{ matrix.inputs }}
         path: results.txt
-
-  combine_results:
-    needs: e2e
-    runs-on: ubuntu-latest
-    steps:
-    - name: Download all results artifacts
-      run: |
-        for i in {1..60}; do
-          echo "Downloading artifact for input $i"
-          mkdir -p results
-          actions/download-artifact --name e2e-results-$i --path results/
-        done
-
-    - name: Combine results
-      run: |
-        echo "# Combined Results" > combined_results.txt
-        for file in results/*.txt; do
-          cat "$file" >> combined_results.txt
-        done
-
-    - name: Upload combined results
-      uses: actions/upload-artifact@v4
-      with:
-        name: combined_e2e_results
-        path: combined_results.txt
-
