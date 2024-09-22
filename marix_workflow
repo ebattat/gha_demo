@@ -5,12 +5,13 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  build:
+  unittest:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -36,7 +37,7 @@ jobs:
         pytest
 
   e2e:
-    needs: [build]
+    needs: [unittest]
     runs-on: ubuntu-latest
     strategy:
       matrix:
