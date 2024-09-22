@@ -61,20 +61,19 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "O/P: ${OUTPUT}" >> $GITHUB_STEP_SUMMARY
 
-        # Append results to $GITHUB_WORKSPACE/results.txt
+        # Append results to results.txt in the workspace
         echo "# I/P: ${{ matrix.inputs }} 5" >> $GITHUB_WORKSPACE/results.txt
-        echo "" >> $GITHUB_WORKSPACE/results.txt
         echo "# O/P: ${OUTPUT}" >> $GITHUB_WORKSPACE/results.txt
         echo "" >> $GITHUB_WORKSPACE/results.txt
 
-  upload_artifact:
+  combine_results:
     needs: e2e
     runs-on: ubuntu-latest
     steps:
-    - name: Create results.txt
+    - name: Create combined results file
       run: |
-        # Ensure the results.txt file is created by combining all previous runs
-        cat $GITHUB_WORKSPACE/results.txt > combined_results.txt
+        echo "# Combined Results" > combined_results.txt
+        cat $GITHUB_WORKSPACE/results.txt >> combined_results.txt
 
     - name: Upload e2e output
       uses: actions/upload-artifact@v4
@@ -82,5 +81,6 @@ jobs:
         name: e2e_results
         path: combined_results.txt
         if-no-files-found: error
+
 
 
