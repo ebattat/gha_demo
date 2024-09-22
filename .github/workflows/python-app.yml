@@ -61,26 +61,37 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "O/P: ${OUTPUT}" >> $GITHUB_STEP_SUMMARY
 
-        # Append results to results.txt in the workspace
-        echo "# I/P: ${{ matrix.inputs }} 5" >> $GITHUB_WORKSPACE/results.txt
-        echo "# O/P: ${OUTPUT}" >> $GITHUB_WORKSPACE/results.txt
-        echo "" >> $GITHUB_WORKSPACE/results.txt
+        # Create and append results to results.txt in the workspace
+        echo "# I/P: ${{ matrix.inputs }} 5" >> results.txt
+        echo "# O/P: ${OUTPUT}" >> results.txt
+        echo "" >> results.txt
 
-  combine_results:
-    needs: e2e
-    runs-on: ubuntu-latest
-    steps:
-    - name: Create combined results file
-      run: |
-        echo "# Combined Results" > combined_results.txt
-        cat $GITHUB_WORKSPACE/results.txt >> combined_results.txt
-
-    - name: Upload e2e output
+    - name: Upload results as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: e2e_results
+        name: e2e-results
+        path: results.txt
+
+  combine_results:
+    needs: [build, e2e]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download results artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: e2e-results
+        path: results
+
+    - name: Combine results
+      run: |
+        echo "# Combined Results" > combined_results.txt
+        cat results/results.txt >> combined_results.txt
+
+    - name: Upload combined results
+      uses: actions/upload-artifact@v4
+      with:
+        name: combined_e2e_results
         path: combined_results.txt
-        if-no-files-found: error
 
 
 
