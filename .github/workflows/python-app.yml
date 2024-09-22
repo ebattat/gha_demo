@@ -52,14 +52,20 @@ jobs:
         export CMD_VALUE="python simple_math.py ${{ matrix.inputs }} 5"
         export OUTPUT=$($CMD_VALUE)
 
-        # Create results.txt if it doesn't exist
-        if [ ! -f $GITHUB_WORKSPACE/results.txt ]; then
-          echo "# Results" > $GITHUB_WORKSPACE/results.txt
-        fi
+        # Log to GitHub step summary
+        echo "### Run Simple Math" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "#### Add" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "I/P: ${{ matrix.inputs }} 5" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "O/P: ${OUTPUT}" >> $GITHUB_STEP_SUMMARY
 
-        # Append results to the file
+        # Append results to $GITHUB_WORKSPACE/results.txt
         echo "# I/P: ${{ matrix.inputs }} 5" >> $GITHUB_WORKSPACE/results.txt
+        echo "" >> $GITHUB_WORKSPACE/results.txt
         echo "# O/P: ${OUTPUT}" >> $GITHUB_WORKSPACE/results.txt
+        echo "" >> $GITHUB_WORKSPACE/results.txt
 
   upload_artifact:
     needs: e2e
