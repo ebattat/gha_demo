@@ -34,7 +34,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-        
+
   e2e:
     needs: [build]
     runs-on: ubuntu-latest
@@ -61,18 +61,15 @@ jobs:
         echo "O/P: ${OUTPUT}" >> $GITHUB_STEP_SUMMARY
 
         # Append results to a shared file in the workspace
-        echo "# I/P: ${{ matrix.inputs }} 5" >> $GITHUB_WORKSPACE/results.txt
-        echo "" >> $GITHUB_WORKSPACE/results.txt
-        echo "# O/P: ${OUTPUT}" >> $GITHUB_WORKSPACE/results.txt
-        echo "" >> $GITHUB_WORKSPACE/results.txt
+        echo "# I/P: ${{ matrix.inputs }} 5" >> results.txt
+        echo "" >> results.txt
+        echo "# O/P: ${OUTPUT}" >> results.txt
+        echo "" >> results.txt
 
-  upload_artifact:
-    needs: e2e
-    runs-on: ubuntu-latest
-    steps:
     - name: Upload e2e output
       uses: actions/upload-artifact@v4
       with:
         name: e2e_results
-        path: $GITHUB_WORKSPACE/results.txt
+        path: results.txt
         if-no-files-found: error
+
