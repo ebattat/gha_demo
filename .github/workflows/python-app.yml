@@ -35,6 +35,7 @@ jobs:
       run: |
         pytest
 
+  jobs:
   e2e:
     needs: [build]
     runs-on: ubuntu-latest
@@ -69,29 +70,28 @@ jobs:
     - name: Upload results as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: e2e-results
+        name: e2e-results-${{ matrix.inputs }}
         path: results.txt
 
   combine_results:
-    needs: [build, e2e]
+    needs: e2e
     runs-on: ubuntu-latest
     steps:
     - name: Download results artifacts
       uses: actions/download-artifact@v2
       with:
-        name: e2e-results
+        name: e2e-results-*
         path: results
 
     - name: Combine results
       run: |
         echo "# Combined Results" > combined_results.txt
-        cat results/results.txt >> combined_results.txt
+        for file in results/*.txt; do
+          cat "$file" >> combined_results.txt
+        done
 
     - name: Upload combined results
       uses: actions/upload-artifact@v4
       with:
         name: combined_e2e_results
         path: combined_results.txt
-
-
-
