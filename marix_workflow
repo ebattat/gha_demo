@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  unittest:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -37,7 +37,7 @@ jobs:
         pytest
 
   e2e:
-    needs: [unittest]
+    needs: [build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
